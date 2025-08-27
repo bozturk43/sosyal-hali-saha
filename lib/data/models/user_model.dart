@@ -1,5 +1,6 @@
 import 'package:sosyal_halisaha/data/models/city_model.dart';
 import 'package:sosyal_halisaha/data/models/post_model.dart';
+import 'package:sosyal_halisaha/data/models/team_model.dart';
 
 class User {
   final int id;
@@ -9,6 +10,7 @@ class User {
   final String? preferredPosition;
   final City? prefferedCity;
   final List<Post> posts; // <-- YENİ ALAN: Kullanıcının gönderi listesi
+  final Team? team;
 
   User({
     required this.id,
@@ -18,6 +20,7 @@ class User {
     this.preferredPosition,
     this.prefferedCity,
     this.posts = const [], // <-- YENİ ALAN (varsayılan boş liste)
+    this.team,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
@@ -34,6 +37,7 @@ class User {
       preferredPosition: json['preferredPosition'],
       prefferedCity: json['city'] != null ? City.fromJson(json['city']) : null,
       posts: userPosts, // <-- YENİ ALAN
+      team: json['team'] != null ? Team.fromJson(json['team']) : null,
     );
   }
 }

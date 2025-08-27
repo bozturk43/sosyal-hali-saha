@@ -2,10 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sosyal_halisaha/core/constants/app_colors.dart';
 import 'package:sosyal_halisaha/core/router/app_router.dart'; // Kendi router dosyamızı import ediyoruz
+import 'package:intl/date_symbol_data_local.dart'; // <-- YENİ IMPORT
+import 'package:flutter_localizations/flutter_localizations.dart'; // <-- YENİ IMPORT
 
-void main() {
-  // Uygulamamızı, tüm Riverpod provider'larına erişebilmesi için
-  // ProviderScope ile sarmalıyoruz. Bu, Riverpod'ı "aktive eder".
+Future<void> main() async {
+  // main fonksiyonu async olduğunda, Flutter'ın başlatıldığından
+  // emin olmak için bu satır gereklidir.
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Türkçe dil ve tarih formatlama verilerini yüklüyoruz.
+  await initializeDateFormatting('tr_TR', null);
+
   runApp(const ProviderScope(child: MyApp()));
 }
 
@@ -29,6 +36,13 @@ class MyApp extends ConsumerWidget {
       // Yönlendirme yapılandırmasını tamamen GoRouter'a devrediyoruz.
       // Artık hangi sayfanın gösterileceğine bu router karar verecek.
       routerConfig: router,
+      // --- LOKALİZASYON AYARLARI ---
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [Locale('tr', 'TR')],
 
       // Uygulama geneli tema ayarlarını buraya ekleyebiliriz.
       theme: ThemeData(

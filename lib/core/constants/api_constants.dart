@@ -13,7 +13,7 @@ class ApiConstants {
 
   // Diğer endpoint'leri daha sonra buraya ekleyeceğiz.
   static const String getMe =
-      '$apiPrefix/users/me?populate[0]=city&populate[1]=posts';
+      '$apiPrefix/users/me?populate[0]=city&populate[1]=posts&populate[2]=team';
   static const String cities = '$apiPrefix/cities';
   // static const String teams = '$apiPrefix/teams';
 }

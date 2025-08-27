@@ -7,6 +7,8 @@ import 'package:sosyal_halisaha/presentation/providers/auth_provider.dart';
 import 'package:sosyal_halisaha/presentation/screens/auth/register_screen.dart';
 import 'package:sosyal_halisaha/presentation/screens/auth/login_screen.dart';
 import 'package:sosyal_halisaha/presentation/screens/main_shell.dart';
+import 'package:sosyal_halisaha/presentation/screens/matches/create_match_screen.dart';
+import 'package:sosyal_halisaha/presentation/screens/matches/matches_screen.dart';
 import 'package:sosyal_halisaha/presentation/screens/profile/edit_profile_screen.dart';
 import 'package:sosyal_halisaha/presentation/screens/profile/profile_screen.dart';
 
@@ -63,6 +65,10 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/register',
         builder: (context, state) => const RegisterScreen(),
       ),
+      GoRoute(
+        path: '/create-match',
+        builder: (context, state) => const CreateMatchScreen(),
+      ),
 
       // 2. Tab Menüsü OLAN, ana iskeletin içindeki sayfalar
       // StatefulShellRoute, alttaki tab menüsünü ve o anki ekranı yönetir.
@@ -82,8 +88,17 @@ final routerProvider = Provider<GoRouter>((ref) {
               GoRoute(path: '/', builder: (context, state) => const HomePage()),
             ],
           ),
+          // --- 2. TAB (index: 1): Maçlarım ---
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/matches',
+                builder: (context, state) => const MatchesScreen(),
+              ),
+            ],
+          ),
 
-          // --- 2. TAB (index: 1): Profil ---
+          // --- 3. TAB (index: 2): Profil ---
           StatefulShellBranch(
             routes: [
               GoRoute(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sosyal_halisaha/data/services/user_service.dart';
+import 'package:sosyal_halisaha/presentation/providers/auth_provider.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -19,6 +20,14 @@ class ProfileScreen extends ConsumerWidget {
           IconButton(
             icon: const Icon(Icons.edit_outlined),
             onPressed: () => context.go('/profile/edit'),
+          ),
+          IconButton(
+            icon: const Icon(Icons.logout),
+            tooltip: 'Çıkış Yap', // Kullanıcıya ipucu
+            onPressed: () {
+              // authNotifier'daki logout metodunu çağırıyoruz.
+              ref.read(authNotifierProvider.notifier).logout();
+            },
           ),
         ],
       ),
