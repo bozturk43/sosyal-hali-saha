@@ -94,5 +94,11 @@ flutter:
   #       - asset: fonts/TrajanPro_Bold.ttf
   #         weight: 700
   #
+  fonts:
+    - family: Cinzel
+      fonts:
+        - asset: assets/fonts/Cinzel-Bold.ttf
+          weight: 700 # Senin de belirttiğin gibi Bold (700) olduğunu belirtiyoruz.
+
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
