@@ -9,8 +9,8 @@ class Match {
   final DateTime startTime;
   final DateTime endTime; // Yeni alan
   final String status; // match_status'tan gelecek
-  final Team homeTeam;
-  final Team awayTeam;
+  final Team? homeTeam;
+  final Team? awayTeam;
   final List<User> homeTeamSquad;
   final List<User> awayTeamSquad;
 
@@ -21,8 +21,8 @@ class Match {
     required this.startTime,
     required this.endTime, // Yeni alan
     required this.status, // Yeni alan
-    required this.homeTeam,
-    required this.awayTeam,
+    this.homeTeam,
+    this.awayTeam,
     this.homeTeamSquad = const [],
     this.awayTeamSquad = const [],
   });
@@ -46,8 +46,12 @@ class Match {
       startTime: DateTime.parse(json['startTime']),
       endTime: DateTime.parse(json['endTime']), // Yeni alan
       status: json['match_status'], // match_status olarak geliyor
-      homeTeam: Team.fromJson(json['home_team']), // home_team olarak geliyor
-      awayTeam: Team.fromJson(json['away_team']), // away_team olarak geliyor
+      homeTeam: json['home_team'] != null
+          ? Team.fromJson(json['home_team'])
+          : null,
+      awayTeam: json['away_team'] != null
+          ? Team.fromJson(json['away_team'])
+          : null,
       homeTeamSquad: homeSquad,
       awayTeamSquad: awaySquad,
     );

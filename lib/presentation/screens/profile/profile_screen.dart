@@ -57,7 +57,7 @@ class ProfileScreen extends ConsumerWidget {
                             style: Theme.of(context).textTheme.titleLarge,
                           ),
                           Text(
-                            user.prefferedCity?.name ?? 'Şehir Belirtilmemiş',
+                            user.preferredCity?.name ?? 'Şehir Belirtilmemiş',
                           ),
                           Text(user.preferredPosition ?? 'Mevki Belirtilmemiş'),
                         ],

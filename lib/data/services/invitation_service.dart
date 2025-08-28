@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sosyal_halisaha/data/models/squad_invitation_model.dart';
 import 'package:sosyal_halisaha/data/services/dio_provider.dart';
 import 'package:sosyal_halisaha/data/services/user_service.dart';
+import 'dart:developer' as developer;
 
 final invitationServiceProvider = Provider(
   (ref) => InvitationService(ref.watch(dioProvider)),
@@ -13,11 +14,7 @@ final myInvitationsProvider = FutureProvider.autoDispose<List<SquadInvitation>>(
   ref,
 ) async {
   // 1. Önce mevcut kullanıcının verisinin gelmesini bekle.
-  final user = await ref.watch(currentUserProvider).value;
-  // 2. Eğer bir sebepten kullanıcı yoksa (örneğin token geçersizse), boş liste döndür.
-  if (user == null) {
-    return [];
-  }
+  final user = await ref.watch(currentUserProvider.future);
   // 3. Servisi çağırırken, az önce aldığımız kullanıcının ID'sini parametre olarak ver.
   return ref.watch(invitationServiceProvider).getMyInvitations(userId: user.id);
 });
@@ -45,8 +42,8 @@ class InvitationService {
         'data': {
           'match': matchId,
           'player': playerId,
-          'invitingTeam': teamId,
-          'status': 'pending',
+          'inviting_team': teamId,
+          'invite_status': 'pending',
         },
       },
     );
@@ -107,6 +104,8 @@ class InvitationService {
         '/api/squad-invitations?filters[match][id][\$eq]=$matchId&populate=*',
       );
       final List<dynamic> data = response.data['data'];
+      developer.log('HATA BURDA $data');
+
       return data.map((i) => SquadInvitation.fromJson(i)).toList();
     } catch (e) {
       throw Exception("Maç davetiyeleri alınamadı: $e");

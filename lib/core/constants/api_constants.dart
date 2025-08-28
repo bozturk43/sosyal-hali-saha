@@ -2,7 +2,9 @@ class ApiConstants {
   // Strapi sunucunun çalıştığı ana adres.
   // EĞER ANDROID EMULATOR KULLANIYORSAN, 'localhost' YERİNE '10.0.2.2' YAZMALISIN.
   // Örn: static const String baseUrl = 'http://10.0.2.2:1337';
-  static const String baseUrl = 'http://192.168.243.2:1337';
+  // static const String baseUrl = 'http://192.168.243.2:1337'; //Emulator den test ipsi
+  static const String baseUrl =
+      'http://192.168.1.104:1337'; //Cihazdan test ipsi
 
   // Strapi V4, tüm API isteklerinin başında /api olmasını gerektirir.
   static const String apiPrefix = '/api';

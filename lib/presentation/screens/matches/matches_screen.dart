@@ -65,14 +65,14 @@ class MatchesScreen extends ConsumerWidget {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    _buildTeamInfo(context, match.homeTeam),
+                                    _buildTeamInfo(context, match.homeTeam!),
                                     Text(
                                       'VS',
                                       style: Theme.of(
                                         context,
                                       ).textTheme.headlineSmall,
                                     ),
-                                    _buildTeamInfo(context, match.awayTeam),
+                                    _buildTeamInfo(context, match.awayTeam!),
                                   ],
                                 ),
                                 const Divider(height: 24),

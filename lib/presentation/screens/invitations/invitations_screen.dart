@@ -102,7 +102,7 @@ class _InvitationCardState extends ConsumerState<_InvitationCard> {
             const Divider(),
             if (match != null) ...[
               Text(
-                '${match.homeTeam.name} vs ${match.awayTeam.name}',
+                '${match.homeTeam?.name} vs ${match.awayTeam?.name}',
                 style: Theme.of(context).textTheme.titleLarge,
               ),
               const SizedBox(height: 8),

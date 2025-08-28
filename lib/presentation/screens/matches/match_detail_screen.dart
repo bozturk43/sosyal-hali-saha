@@ -26,9 +26,14 @@ class MatchDetailScreen extends ConsumerWidget {
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, s) => Center(child: Text('Hata: $e')),
         data: (match) {
+          if (match.homeTeam == null || match.awayTeam == null) {
+            return const Center(
+              child: Text('Maçın takım bilgileri eksik veya yüklenemedi.'),
+            );
+          }
           // Bu kullanıcı bu maçtaki takımlardan birinin kaptanı mı?
-          final isHomeCaptain = match.homeTeam.captain?.id == currentUser?.id;
-          final isAwayCaptain = match.awayTeam.captain?.id == currentUser?.id;
+          final isHomeCaptain = match.homeTeam!.captain?.id == currentUser?.id;
+          final isAwayCaptain = match.awayTeam!.captain?.id == currentUser?.id;
           final isCaptain = isHomeCaptain || isAwayCaptain;
 
           return SingleChildScrollView(
@@ -37,7 +42,7 @@ class MatchDetailScreen extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // 1. Takım Bilgileri Başlığı
-                _buildTeamHeader(context, match.homeTeam, match.awayTeam),
+                _buildTeamHeader(context, match.homeTeam!, match.awayTeam!),
                 const SizedBox(height: 24),
 
                 // 2. Maç Detayları Kartı
