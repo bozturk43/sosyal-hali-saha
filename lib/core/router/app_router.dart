@@ -6,11 +6,16 @@ import 'package:sosyal_halisaha/presentation/providers/auth_provider.dart';
 // Yeni ekranlarımızı ve iskeletimizi import ediyoruz
 import 'package:sosyal_halisaha/presentation/screens/auth/register_screen.dart';
 import 'package:sosyal_halisaha/presentation/screens/auth/login_screen.dart';
+import 'package:sosyal_halisaha/presentation/screens/invitations/invitations_screen.dart';
 import 'package:sosyal_halisaha/presentation/screens/main_shell.dart';
+import 'package:sosyal_halisaha/data/models/match_model.dart'
+    as model; // <-- TAKMA ADI EKLEDİK
 import 'package:sosyal_halisaha/presentation/screens/matches/create_match_screen.dart';
+import 'package:sosyal_halisaha/presentation/screens/matches/match_detail_screen.dart';
 import 'package:sosyal_halisaha/presentation/screens/matches/matches_screen.dart';
 import 'package:sosyal_halisaha/presentation/screens/profile/edit_profile_screen.dart';
 import 'package:sosyal_halisaha/presentation/screens/profile/profile_screen.dart';
+import 'package:sosyal_halisaha/presentation/screens/squad/set_squad_screen.dart';
 
 // ----- GEÇİCİ EKRANLAR -----
 // RegisterScreen'i kendi dosyasından import ettiğimiz için buradan silebiliriz.
@@ -94,6 +99,35 @@ final routerProvider = Provider<GoRouter>((ref) {
               GoRoute(
                 path: '/matches',
                 builder: (context, state) => const MatchesScreen(),
+                routes: [
+                  GoRoute(
+                    path: ':documentId',
+                    builder: (context, state) {
+                      // 'id' yerine 'documentId'yi okuyoruz
+                      final documentId = state.pathParameters['documentId']!;
+                      return MatchDetailScreen(documentId: documentId);
+                    },
+                    routes: [
+                      // YENİ ALT ROTA
+                      GoRoute(
+                        path: 'set-squad', // /matches/:documentId/set-squad
+                        builder: (context, state) {
+                          // Maçın documentId'sini alıp ekrana iletiyoruz.
+                          final match = state.extra as model.Match;
+                          return SetSquadScreen(match: match);
+                        },
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/invitations',
+                builder: (context, state) => const InvitationsScreen(),
               ),
             ],
           ),

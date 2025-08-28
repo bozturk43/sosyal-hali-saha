@@ -11,6 +11,7 @@ class User {
   final City? prefferedCity;
   final List<Post> posts; // <-- YENİ ALAN: Kullanıcının gönderi listesi
   final Team? team;
+  final bool isJoker;
 
   User({
     required this.id,
@@ -21,6 +22,7 @@ class User {
     this.prefferedCity,
     this.posts = const [], // <-- YENİ ALAN (varsayılan boş liste)
     this.team,
+    this.isJoker = false,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
@@ -38,6 +40,7 @@ class User {
       prefferedCity: json['city'] != null ? City.fromJson(json['city']) : null,
       posts: userPosts, // <-- YENİ ALAN
       team: json['team'] != null ? Team.fromJson(json['team']) : null,
+      isJoker: json['isJoker'] ?? false,
     );
   }
 }

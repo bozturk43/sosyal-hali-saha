@@ -10,7 +10,6 @@ import 'package:sosyal_halisaha/data/services/user_service.dart';
 final teamServiceProvider = Provider(
   (ref) => TeamService(ref.watch(dioProvider)),
 );
-
 // Takım arama ve listeleme için kullanılan provider.
 // '.family' sayesinde dışarıdan bir 'query' (arama metni) parametresi alabilir.
 final allTeamsProvider = FutureProvider.autoDispose.family<List<Team>, String>((
@@ -24,6 +23,12 @@ final allTeamsProvider = FutureProvider.autoDispose.family<List<Team>, String>((
     query: query,
     currentTeamId: currentUser?.team?.id,
   );
+});
+final teamDetailsProvider = FutureProvider.autoDispose.family<Team, String>((
+  ref,
+  documentId,
+) {
+  return ref.watch(teamServiceProvider).getTeamDetails(documentId);
 });
 
 class TeamService {
@@ -77,6 +82,17 @@ class TeamService {
       return data.map((t) => Team.fromJson(t)).toList();
     } catch (e) {
       throw Exception("Takımlar getirilemedi: $e");
+    }
+  }
+
+  Future<Team> getTeamDetails(String documentId) async {
+    try {
+      final response = await _dio.get(
+        '/api/teams/$documentId?populate[0]=players&populate[1]=captain',
+      );
+      return Team.fromJson(response.data['data']);
+    } catch (e) {
+      throw Exception("Takım detayları getirilemedi: $e");
     }
   }
 }

@@ -42,4 +42,17 @@ class UserService {
       throw Exception('Profil güncellenemedi.');
     }
   }
+
+  Future<List<User>> findJokerPlayers({String query = ''}) async {
+    try {
+      final response = await _dio.get(
+        '/api/users?filters[isJoker][\$eq]=true&filters[username][\$containsi]=$query',
+      );
+      final List<dynamic> data =
+          response.data; // user listesi doğrudan data olarak gelir
+      return data.map((userJson) => User.fromJson(userJson)).toList();
+    } catch (e) {
+      throw Exception('Joker oyuncular bulunamadı.');
+    }
+  }
 }

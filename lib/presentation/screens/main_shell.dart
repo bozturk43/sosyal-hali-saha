@@ -27,7 +27,11 @@ class MainShell extends StatelessWidget {
           BottomNavigationBarItem(
             icon: Icon(Icons.sports_soccer),
             label: 'Maçlarım',
-          ), // <-- YENİ TAB
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.mail_outline),
+            label: 'Davetlerim',
+          ),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profil'),
         ],
         // Hangi tab'ın aktif olduğunu doğrudan navigationShell'den öğreniyoruz.

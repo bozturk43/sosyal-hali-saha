@@ -17,6 +17,14 @@ final myMatchesProvider = FutureProvider.autoDispose<List<Match>>((ref) async {
   return ref.watch(matchServiceProvider).getMyMatches();
 });
 
+final matchDetailsProvider = FutureProvider.autoDispose.family<Match, String>((
+  ref,
+  documentId,
+) {
+  final matchService = ref.watch(matchServiceProvider);
+  return matchService.getMatchDetails(documentId);
+});
+
 class MatchService {
   final Dio _dio;
   MatchService(this._dio);
@@ -73,6 +81,31 @@ class MatchService {
       );
     } catch (e) {
       throw Exception("Maç teklifi oluşturulamadı: $e");
+    }
+  }
+
+  Future<Match> getMatchDetails(String documentId) async {
+    try {
+      final response = await _dio.get(
+        '/api/matches/$documentId',
+        queryParameters: {
+          // Senin de belirttiğin gibi '*' yerine 'true' kullanarak
+          // ve dio'nun Map yapısından faydalanarak populate ediyoruz.
+          'populate': {
+            'home_team': {
+              'populate': {'captain': true},
+            },
+            'away_team': {
+              'populate': {'captain': true},
+            },
+            'homeTeamSquad': true,
+            'awayTeamSquad': true,
+          },
+        },
+      );
+      return Match.fromJson(response.data['data']);
+    } catch (e) {
+      throw Exception("Maç detayları alınamadı: $e");
     }
   }
 }
