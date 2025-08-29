@@ -2,10 +2,12 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sosyal_halisaha/data/services/user_service.dart';
 import 'package:sosyal_halisaha/presentation/providers/auth_provider.dart';
 // Yeni ekranlarımızı ve iskeletimizi import ediyoruz
 import 'package:sosyal_halisaha/presentation/screens/auth/register_screen.dart';
 import 'package:sosyal_halisaha/presentation/screens/auth/login_screen.dart';
+import 'package:sosyal_halisaha/presentation/screens/home/home_screen.dart';
 import 'package:sosyal_halisaha/presentation/screens/invitations/invitations_screen.dart';
 import 'package:sosyal_halisaha/presentation/screens/main_shell.dart';
 import 'package:sosyal_halisaha/data/models/match_model.dart'
@@ -16,15 +18,11 @@ import 'package:sosyal_halisaha/presentation/screens/matches/matches_screen.dart
 import 'package:sosyal_halisaha/presentation/screens/profile/edit_profile_screen.dart';
 import 'package:sosyal_halisaha/presentation/screens/profile/profile_screen.dart';
 import 'package:sosyal_halisaha/presentation/screens/squad/set_squad_screen.dart';
+import 'package:sosyal_halisaha/presentation/screens/team/create_team_screen.dart';
+import 'package:sosyal_halisaha/presentation/screens/team/manage_team_screen.dart';
 
 // ----- GEÇİCİ EKRANLAR -----
 // RegisterScreen'i kendi dosyasından import ettiğimiz için buradan silebiliriz.
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
-  @override
-  Widget build(BuildContext context) =>
-      const Scaffold(body: Center(child: Text("Ana Sayfa Akışı")));
-}
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -73,6 +71,10 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/create-match',
         builder: (context, state) => const CreateMatchScreen(),
+      ),
+      GoRoute(
+        path: '/create-team',
+        builder: (context, state) => const CreateTeamScreen(),
       ),
 
       // 2. Tab Menüsü OLAN, ana iskeletin içindeki sayfalar
@@ -144,6 +146,13 @@ final routerProvider = Provider<GoRouter>((ref) {
                     builder: (context, state) => const EditProfileScreen(),
                   ),
                 ],
+              ),
+              GoRoute(
+                path: '/team/:documentId/manage',
+                builder: (context, state) {
+                  final docId = state.pathParameters['documentId']!;
+                  return ManageTeamScreen(teamDocumentId: docId);
+                },
               ),
             ],
           ),

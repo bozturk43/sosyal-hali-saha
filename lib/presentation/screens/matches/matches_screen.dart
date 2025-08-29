@@ -153,7 +153,7 @@ class MatchesScreen extends ConsumerWidget {
           onPressed: isCaptain
               ? () {
                   // Kullanıcı kaptansa, Maç Oluşturma ekranına yönlendiriyoruz.
-                  context.go('/create-match');
+                  context.push('/create-match');
                 }
               : null, // Kaptan değilse buton pasif (disabled) olur.
           backgroundColor: isCaptain

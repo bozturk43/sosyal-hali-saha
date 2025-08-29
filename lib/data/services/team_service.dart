@@ -1,6 +1,8 @@
 // lib/data/services/team_service.dart
 
 import 'package:dio/dio.dart';
+import 'dart:convert'; // jsonEncode için
+import 'dart:io'; // File için
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sosyal_halisaha/data/models/team_model.dart';
 import 'package:sosyal_halisaha/data/services/dio_provider.dart';
@@ -35,28 +37,59 @@ class TeamService {
   final Dio _dio;
   TeamService(this._dio);
 
-  /// Yeni bir takım oluşturur.
   Future<Team> createTeam({
     required String name,
     required int captainId,
+    File? logoFile,
   }) async {
     try {
-      final response = await _dio.post(
-        '/api/teams',
-        // Strapi v4, veri gönderirken 'data' objesi içinde sarmalanmasını bekler.
-        data: {
-          'data': {'name': name, 'captain': captainId},
-        },
-      );
+      int? logoId;
+
+      // --- ADIM 1: Eğer bir logo dosyası seçilmişse, önce onu yükle ---
+      if (logoFile != null) {
+        final formData = FormData.fromMap({
+          // Strapi'nin /api/upload endpoint'i dosyaları 'files' anahtarı altında bekler.
+          'files': await MultipartFile.fromFile(
+            logoFile.path,
+            filename: logoFile.path.split('/').last,
+          ),
+        });
+
+        // Sadece dosyayı yüklemek için /api/upload'a istek atıyoruz.
+        final uploadResponse = await _dio.post('/api/upload', data: formData);
+
+        // Strapi yüklenen dosyaların bilgilerini bir dizi içinde döner.
+        if (uploadResponse.statusCode == 200 &&
+            uploadResponse.data.isNotEmpty) {
+          // Yüklenen dosyanın ID'sini alıyoruz.
+          logoId = uploadResponse.data[0]['id'] as int;
+        } else {
+          throw Exception('Logo yüklenemedi.');
+        }
+      }
+      // ----------------------------------------------------------------
+
+      // --- ADIM 2: Takım bilgilerini ve (varsa) logo ID'sini gönder ---
+      final teamData = {
+        'name': name,
+        'captain': captainId,
+        // logoId null değilse, yani bir logo yüklendiyse, onu da veriye ekle.
+        if (logoId != null) 'logo': logoId,
+      };
+
+      // Artık dosya göndermediğimiz için saf JSON isteği atıyoruz.
+      final response = await _dio.post('/api/teams', data: {'data': teamData});
+
       return Team.fromJson(response.data['data']);
+      // ----------------------------------------------------------------
     } catch (e) {
+      if (e is DioException) {
+        print("Dio Hatası Detayı: ${e.response?.data}");
+      }
       throw Exception("Takım oluşturulamadı: $e");
     }
   }
 
-  /// Sistemdeki takımları listeler ve arama yapar.
-  /// [query] parametresi takım adında arama yapmak için kullanılır.
-  /// [currentTeamId] parametresi, kullanıcının kendi takımını listeden hariç tutmak için kullanılır.
   Future<List<Team>> getTeams({String query = '', int? currentTeamId}) async {
     try {
       final queryParameters = <String, dynamic>{
@@ -93,6 +126,50 @@ class TeamService {
       return Team.fromJson(response.data['data']);
     } catch (e) {
       throw Exception("Takım detayları getirilemedi: $e");
+    }
+  }
+
+  Future<Team> addPlayerToPool({
+    required int teamId,
+    required List<int> existingPlayerIds,
+    required int newPlayerId,
+  }) async {
+    try {
+      // Mevcut oyuncu ID'lerine yenisini ekleyip tekrarları önlemek için Set kullanıyoruz.
+      final updatedPlayerIds = {...existingPlayerIds, newPlayerId}.toList();
+
+      final response = await _dio.put(
+        '/api/teams/$teamId',
+        data: {
+          'data': {'players': updatedPlayerIds},
+        },
+      );
+      return Team.fromJson(response.data['data']);
+    } catch (e) {
+      throw Exception('Oyuncu havuza eklenemedi.');
+    }
+  }
+
+  Future<Team> removePlayerFromPool({
+    required int teamId,
+    required List<int> existingPlayerIds,
+    required int playerToRemoveId,
+  }) async {
+    try {
+      // Mevcut oyuncu listesinden çıkarılacak oyuncunun ID'sini siliyoruz.
+      final updatedPlayerIds = existingPlayerIds
+          .where((id) => id != playerToRemoveId)
+          .toList();
+
+      final response = await _dio.put(
+        '/api/teams/$teamId',
+        data: {
+          'data': {'players': updatedPlayerIds},
+        },
+      );
+      return Team.fromJson(response.data['data']);
+    } catch (e) {
+      throw Exception('Oyuncu havuzdan çıkarılamadı.');
     }
   }
 }

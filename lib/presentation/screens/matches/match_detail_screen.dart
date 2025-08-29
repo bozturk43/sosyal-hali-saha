@@ -132,16 +132,20 @@ class MatchDetailScreen extends ConsumerWidget {
   Widget _buildMatchInfoCard(BuildContext context, Match match) {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
             ListTile(
-              leading: const Icon(Icons.location_on),
-              title: Text(match.location),
+              leading: const Icon(Icons.location_on, size: 18),
+              title: Text(
+                style: Theme.of(context).textTheme.bodySmall,
+                match.location,
+              ),
             ),
             ListTile(
-              leading: const Icon(Icons.calendar_today),
+              leading: const Icon(Icons.calendar_today, size: 18),
               title: Text(
+                style: Theme.of(context).textTheme.bodySmall,
                 DateFormat(
                   'dd MMMM yyyy, EEEE',
                   'tr_TR',
@@ -149,14 +153,18 @@ class MatchDetailScreen extends ConsumerWidget {
               ),
             ),
             ListTile(
-              leading: const Icon(Icons.access_time),
+              leading: const Icon(Icons.access_time, size: 18),
               title: Text(
+                style: Theme.of(context).textTheme.bodySmall,
                 '${DateFormat('HH:mm').format(match.startTime)} - ${DateFormat('HH:mm').format(match.endTime)}',
               ),
             ),
             ListTile(
-              leading: const Icon(Icons.flag),
-              title: Text('Durum: ${match.status.toUpperCase()}'),
+              leading: const Icon(Icons.flag, size: 18),
+              title: Text(
+                style: Theme.of(context).textTheme.bodySmall,
+                'Durum: ${match.status.toUpperCase()}',
+              ),
             ),
           ],
         ),
@@ -172,12 +180,20 @@ class MatchDetailScreen extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(title, style: Theme.of(context).textTheme.headlineSmall),
+        Text(
+          title,
+          style: Theme.of(
+            context,
+          ).textTheme.headlineSmall?.copyWith(color: Colors.black),
+        ),
         const Divider(),
         if (squad.isEmpty)
           const Padding(
             padding: EdgeInsets.symmetric(vertical: 8.0),
-            child: Text('Kadro henüz belirlenmedi.'),
+            child: Text(
+              'Kadro henüz belirlenmedi.',
+              style: TextStyle(color: Colors.black),
+            ),
           )
         else
           // Kadro listesi
@@ -185,9 +201,13 @@ class MatchDetailScreen extends ConsumerWidget {
               .map(
                 (player) => ListTile(
                   leading: CircleAvatar(child: Text(player.username[0])),
-                  title: Text(player.fullName ?? player.username),
+                  title: Text(
+                    player.fullName ?? player.username,
+                    style: TextStyle(color: Colors.black),
+                  ),
                   subtitle: Text(
                     player.preferredPosition ?? 'Mevki Belirtilmemiş',
+                    style: TextStyle(color: Colors.black),
                   ),
                 ),
               )

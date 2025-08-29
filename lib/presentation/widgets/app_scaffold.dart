@@ -6,8 +6,14 @@ class AppScaffold extends StatelessWidget {
   final PreferredSizeWidget? appBar;
   // Dışarıdan sayfanın asıl içeriğini (body) alacağız (zorunlu).
   final Widget body;
+  final Widget? floatingActionButton;
 
-  const AppScaffold({super.key, this.appBar, required this.body});
+  const AppScaffold({
+    super.key,
+    this.appBar,
+    required this.body,
+    this.floatingActionButton,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -17,6 +23,7 @@ class AppScaffold extends StatelessWidget {
       backgroundColor: Colors.transparent,
       appBar: appBar,
       // 2. Scaffold'ın body'sini, gradient'i uyguladığımız bir Container ile sarmalıyoruz.
+      floatingActionButton: floatingActionButton,
       body: Container(
         height: double
             .infinity, // Container'ın tüm ekran yüksekliğini kaplamasını sağla
